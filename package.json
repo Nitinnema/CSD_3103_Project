@@ -1,0 +1,24 @@
+{
+  "name": "csd_3103_project",
+  "version": "1.0.0",
+  "description": "JS Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OmarAbouzeid95/CSD_3103_Project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OmarAbouzeid95/CSD_3103_Project/issues"
+  },
+  "homepage": "https://github.com/OmarAbouzeid95/CSD_3103_Project#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongodb": "^6.3.0",
+    "mongoose": "^8.0.2"
+  }
+}
