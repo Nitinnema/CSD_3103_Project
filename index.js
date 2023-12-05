@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const path = require('path');
 const bodyParser = require('body-parser');
 const bookRoutes = require('./routes/bookRoutes');
-
 const app = express();
 const SERVER_PORT = 3000;
 const SERVER_HOST = "localhost";
@@ -22,15 +21,21 @@ mongoose.connect('mongodb://localhost:27017/bookStore').then(() => {
 app.use('/book', bookRoutes);
 
 app.get("/showBooks", function (req, res) {
-    const filePath = path.join(__dirname, 'views', 'showBooks.html');
-    res.sendFile(filePath);
+   const filePath = path.join(__dirname, 'views', 'showBooks.html');
+   res.sendFile(filePath);
 });
 
-app.get("/", function (req, res) {
-    const filePath = path.join(__dirname, 'views', 'index.html');
-    res.sendFile(filePath);
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/views/home.html');
+});
+  
+app.get('/login', (req, res) => {
+    res.sendFile(__dirname + '/views/login.html');
 });
 
 app.listen(process.env.PORT || SERVER_PORT, () => {
     console.log(`Server running at http://${SERVER_HOST}:${SERVER_PORT}/`);
 });
+
+
+
