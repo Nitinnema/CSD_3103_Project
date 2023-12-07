@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Browse Books</title>
+        <!-- CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- JavaScript and dependencies (Popper.js and Bootstrap Bundle with Popper) -->
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+        <style>
+            .search-container {
+                margin-right: 15px; /* Adjust as needed for padding */
+            }
+            .me-2,
+            .btn {
+                margin-top: 12px; /* Adjust the margin top as needed */
+            }
+            .container {
+                margin-top: 50px;
+            }
+            .navbar-nav {
+                margin-right: 25px;
+            }
+            .text-center {
+                text-align: center;
+                margin-top:25px;
+            }
+            .form-container {
+            max-width: 400px;
+            margin: auto;
+        }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">FINOP</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-md-6 offset-md-3">
+                    <form class="form-container">
+                        <div class="mb-3">
+                            <label for="firstName" class="form-label">First Name</label>
+                            <input type="email" class="form-control" id="firstName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="lastName" class="form-label">Last Name</label>
+                            <input type="email" class="form-control" id="lastName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="email" class="form-control" id="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" required> 
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                        <button type="submit" class="btn btn-primary login-btn" style="padding-left:25px; padding-right:25px;">Sign up</button>
+                        </div>
+                        <p id="error-msg" class="text-danger text-center"></p>
+                    </form>
+                    <p class="text-center">Already have an account? <span class="ps-2"><a href="/login">login</a></span></p>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script>
+        const $ = (selector) => document.querySelector(selector);
+
+        const loginBtn = $('.login-btn');
+        loginBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const username = $('#username').value;
+            const password = $('#password').value;
+            const firstName = $('#firstName').value;
+            const lastName = $('#lastName').value;
+            const formData = {
+                username,
+                password,
+                firstName,
+                lastName
+            };
+            const res = await fetch('/customer/addCustomer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+            const data = await res.json();
+            const { customer } = data;
+            // customer was found with the matching username and password
+            if(customer) {
+                // add loggedIn user to the sessionStorage
+                sessionStorage.setItem('loggedUser', JSON.stringify(customer));
+                // redirect to browse page
+                window.location.href = '/';
+            } else {
+                $('#error-msg').innerText = 'Something went wrong, try again later.'
+            }
+        });
+    </script>
+</html>
