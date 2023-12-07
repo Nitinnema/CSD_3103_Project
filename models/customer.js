@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { Schema, model } = mongoose;
+const { Schema, model, ObjectId } = mongoose;
 const Order = require('./order');
 
 const CustomerSchema = Schema({
@@ -19,7 +19,7 @@ const CustomerSchema = Schema({
         type: String,
         required: true
     },
-    orders: [{type: Order}]
+    orders: [{type: ObjectId, ref: 'Order'}]
 });
 
 const Customer = model('Customer', CustomerSchema);

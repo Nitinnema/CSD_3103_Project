@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { Schema, model } = mongoose;
+const { Schema, model, ObjectId } = mongoose;
 const Book = require('./book');
 
 const OrderSchema = Schema({
@@ -7,7 +7,7 @@ const OrderSchema = Schema({
         type: Date,
         required: true
     },
-    books: [{type: Book}]
+    books: [{type: ObjectId, ref: 'Book'}]
 });
 
 
