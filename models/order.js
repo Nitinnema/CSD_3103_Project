@@ -7,7 +7,11 @@ const OrderSchema = Schema({
         type: Date,
         required: true
     },
-    books: [{type: ObjectId, ref: 'Book'}]
+    books: [{type: ObjectId, ref: 'Book'}],
+    status: {
+        type: String,
+        required: true
+    }
 });
 
 
