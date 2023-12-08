@@ -14,7 +14,7 @@
     <style>
         .card {
             padding: 1em;
-            max-width: 250px;
+            max-width: 350px;
             box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
         }
         ul {
@@ -33,10 +33,7 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/">FINOP</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="d-flex justify-content-center align-items-center">
+                <div class="d-flex justify-content-center align-items-center collapse">
                     <form class="d-flex" role="search" id="search-form">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="search-input">
                         <button class="btn btn-outline-success" type="submit" id="search-btn">Search</button>
@@ -57,8 +54,8 @@
                 </div>
             </div>
         </nav>
-        <section id="books-section" class="m-5 p-5">
-            <div class="wrapper container-xl justify-content-center align-content-center">
+        <section id="books-section" class="d-flex justify-content-center align-content-center m-5">
+            <div class="wrapper m-4 container-md">
                 <h2 >Browse Books</h2>
                 <h4 id="search-title"></h4>
                 <div id="books-container" class="row mt-5"></div>
@@ -110,7 +107,7 @@
             const { bookName, authorName, pages, quantity } = book;
             return (
                 `
-                <div class="card col-md-4 col-sm-6 m-2">
+                <div class="card col-md-4 col-xsm-6 m-2">
                     <div class="card-body">
                         <h5 class="card-title">${bookName}</h5>
                         <h6 class="card-subtitle mb-2 text-body-secondary">Author: ${authorName}</h6>
