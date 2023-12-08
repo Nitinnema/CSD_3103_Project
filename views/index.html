@@ -176,7 +176,6 @@
             price: bookPrice,
             quantity: quantityOrdered.value
         };
-        console.log(bookData, 'jjjjjjjjjjjjjjjjjj');
         try {
             const response = await fetch('/order/add-to-cart', {
                 method: 'POST',

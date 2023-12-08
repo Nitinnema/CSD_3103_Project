@@ -3,11 +3,6 @@ const { Schema, model, ObjectId } = mongoose;
 const Book = require('./book');
 
 const OrderSchema = Schema({
-    id: {
-        type: Number, 
-        required: true,
-        unique: true
-    },
     customer: {
         type: ObjectId,
         ref: 'Customer'
@@ -16,9 +11,13 @@ const OrderSchema = Schema({
         type: Date,
         required: true
     },
-    books: [{type: ObjectId, ref: 'Book'}],
+    books: [],
     status: {
         type: String,
+        required: true
+    },
+    totalPrice: {
+        type: Number,
         required: true
     }
 });

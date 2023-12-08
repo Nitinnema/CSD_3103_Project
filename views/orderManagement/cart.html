@@ -82,9 +82,9 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Cart Summary</h5>
-                        <p>Total Items: 2</p>
-                        <p>Total Price: $25</p>
-                        <button class="btn btn-primary btn-block">Checkout</button>
+                        <p >Total Items: <span id="cart-items-count"></span></p>
+                        <p >Total Items: <span id="cart-items-price"></span></p>
+                        <button class="btn btn-primary btn-block" id="checkout-btn">Checkout</button>
                     </div>
                 </div>
             </div>
@@ -96,7 +96,7 @@
 <script>
     const $ = (selector) => document.querySelector(selector);
     const loggedUser = JSON.parse(sessionStorage.getItem('loggedUser'));
-    console.log(loggedUser);
+    console.log('loggedUser: ', loggedUser);
     if (!loggedUser) {
         window.location.href = '/login';
     }
@@ -137,10 +137,28 @@
     const addContent = async (keyword) => {
         const allBooks = await fetchBooks();
         const filteredBooks = keyword ? allBooks.filter(book => book.bookName.toLowerCase().includes(keyword.toLowerCase())) : allBooks;
+        $('#cart-items-count').innerText = filteredBooks.length;
+        $('#cart-items-price').innerText = filteredBooks.reduce((total, current) => {
+            current = parseInt(current.price) * current.quantity;
+            return current + total;
+        }, 0);
         const bookCards = filteredBooks.map(book => cardComponent(book)).join('');
         const booksContainer = $('#cart-container');
         booksContainer.innerHTML = bookCards;
     };
+
+    /****** checkout btn listener ******/
+    $('#checkout-btn').addEventListener('click', async () => {
+        const res = await fetch('http://localhost:3000/order/addOrder', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({customer: loggedUser, totalPrice: parseInt($('#cart-items-price').innerText)})
+        });
+        const data = await res.json();
+        console.log('data: ', data);
+    });
 
     addContent();
 
@@ -163,7 +181,7 @@
         } catch (error) {
             console.error('Error removing from cart:', error);
         }
-    }
+    };
 
 </script>
 
