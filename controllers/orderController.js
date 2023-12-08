@@ -33,9 +33,10 @@ const addOrder = async (req, res) => {
     try {
         const books = cart;
         const { customer, totalPrice } = req.body;
-        const date = new Date().getDate();
+        const date = new Date();
+        const myDate = `${date.getMonth()}/${date.getDay()}/${date.getFullYear()}`
         const status = 'Order placed';
-        const newOrder = new Order({customer, books, date, status, totalPrice});
+        const newOrder = new Order({customer, books, date: myDate, status, totalPrice});
         await newOrder.save();
         res.status(200).json(newOrder);
     } catch(err) {

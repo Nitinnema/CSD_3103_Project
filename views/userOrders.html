@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- JavaScript and dependencies (Popper.js and Bootstrap Bundle with Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>  
+</head>
+<style>
+    .card {
+        padding: 1em;
+        max-width: 550px;
+        box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+        margin-bottom: 20px;
+    }
+    ul {
+        list-style: none;
+        padding-left: 0px;
+        align-self: 'center';
+    }
+
+    #drop-down {
+        padding-top: 25px;
+    }
+
+    .none {
+        display: none;
+    }
+
+    .main-container {
+        max-width: 900px;
+        margin: auto;
+    }
+</style>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">FINOP</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="d-flex justify-content-center align-items-center">
+                <form class="d-flex" role="search" id="search-form">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
+                        id="search-input">
+                    <button class="btn btn-outline-success" type="submit" id="search-btn">Search</button>
+                </form>
+                <ul>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" id="drop-down"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Dropdown
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/orderCart">Cart</a></li>
+                            <li><a class="dropdown-item" href="/userOrders">Orders</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#" id="signout">Sign out</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5 main-container">
+        <div class="row justify-content-center">
+            <div class="col-md-8" id="orders-container">
+                <h1 class="mb-5">Your Orders</h1>
+                <!-- dynamic insertion-->
+                 
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    const $ = (selector) => document.querySelector(selector);
+    const loggedUser = JSON.parse(sessionStorage.getItem('loggedUser'));
+    console.log('loggedUser: ', loggedUser);
+    if (!loggedUser) {
+        window.location.href = '/login';
+    }
+
+    $('#signout').addEventListener('click', () => {
+        // clear session storage loggedUser
+        sessionStorage.setItem('loggedUser', '');
+        // redirect to login page
+        window.location.href = '/login';
+    });
+
+    $('#drop-down').innerText = `Hello, ${loggedUser.firstName}`;
+
+    /****** viewing orders functions ******/
+    const fetchOrders = async () => {
+        const res = await fetch('http://localhost:3000/order/getOrders');
+        const data = await res.json();
+        return data.orders;
+    };
+
+    const cardComponent = (order) => {
+        const { _id ,books, date, status, totalPrice } = order;
+        const booksDetails = books.map(book => {
+            return (
+                `
+                    <div class="d-flex justify-content-between align-items-center">
+                            <p>${book.title}</p>
+                            <div>
+                                <p class="text-right">Price: $${book.price}</p>
+                                <p class="text-right">Quantity: ${book.quantity}</p>
+                            </div>
+                    </div>
+                    <hr>
+                `
+            );
+        }).join('');
+        return (
+            `
+                <!-- Cart items list -->
+                <div class="card"> 
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="fw-bold">Order ID: </h5>
+                            <h5 class="fw-bold">${_id}</h5>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <p>Date: </p>
+                            <p>${date}</p>
+                        </div>
+                        <h5>Order items:</h5>
+                        <hr>
+                        ${booksDetails}
+                        <div class="d-flex justify-content-between align-items-center">
+                            <p>Order Status: </p>
+                            <p class="text-success">${status}</p>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <p>Total Price: </p>
+                            <p>$${totalPrice}</p>
+                        </div>
+                    </div>
+                </div>
+                `
+        );
+    };
+
+    const addContent = async () => {
+        const orders = await fetchOrders();
+        const ordersContent = orders.map(order => cardComponent(order)).join('');
+        $('#orders-container').innerHTML += ordersContent;
+    }
+
+    addContent();
+    
+</script>
+
+</html>

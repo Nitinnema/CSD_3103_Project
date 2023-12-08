@@ -58,7 +58,13 @@ app.get("/showOrders", function (req, res) {
     res.sendFile(filePath);
 });
 
-/********* Order Management *********/
+/********* User app Management *********/
+app.get('/userOrders', (req, res) => {
+    const filePath = path.join(__dirname, 'views', 'userOrders.html');
+    res.sendFile(filePath);
+});
+
+
 app.get('/orderCart', (req, res) => {
     const filePath = path.join(__dirname, 'views', 'orderManagement', 'cart.html');
     res.sendFile(filePath);

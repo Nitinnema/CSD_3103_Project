@@ -8,7 +8,7 @@ const OrderSchema = Schema({
         ref: 'Customer'
     },
     date: {
-        type: Date,
+        type: String,
         required: true
     },
     books: [],
