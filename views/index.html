@@ -10,6 +10,8 @@
         <!-- JavaScript and dependencies (Popper.js and Bootstrap Bundle with Popper) -->
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     </head>
     <style>
         .card {
@@ -44,7 +46,7 @@
                               Dropdown
                             </a>
                             <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" href="#">Cart</a></li>
+                              <li><a class="dropdown-item" href="orderCart">Cart</a></li>
                               <li><a class="dropdown-item" href="#">Orders</a></li>
                               <li><hr class="dropdown-divider"></li>
                               <li><a class="dropdown-item" href="#" id="signout">Sign out</a></li>
@@ -64,6 +66,27 @@
                 </div>
             </div>
         </section>
+
+        <!-- Modal -->
+        <div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cartModalLabel">Added to Cart</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="modalMessage"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <a href="orderCart" class="btn btn-primary">View Cart</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
     <script>
         const $ = (selector) => document.querySelector(selector);
@@ -105,23 +128,22 @@
         };
 
         const cardComponent = (book) => {
-            globalIndex++;
-            const { bookName, authorName, pages, quantity } = book;
-            bookMap.set(globalIndex.toString(), book);
+            const {_id, bookName, authorName, bookPrice, pages, quantity } = book;
             return (
                 `
                 <div class="card col-md-4 col-xsm-6 m-2">
                     <div class="card-body">
                         <h5 class="card-title">${bookName}</h5>
                         <h6 class="card-subtitle mb-2 text-body-secondary">Author: ${authorName}</h6>
+                        <p class="card-text mb-0">Price: $${bookPrice}</p>
                         <p class="card-text mb-0">Pages: ${pages}</p>
                         <p class="card-text">Quantity: ${quantity}</p>
-                        <a href="#" class="card-link" data-book-id=${globalIndex}>Add to Cart</a>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cartModal" onclick="addToCart('${_id}','${bookName}','${bookPrice}')">Add to Cart</button>
                     </div>
                 </div>
                 `
             );
-        };
+        };      
 
         const addContent = async (keyword) => {
             const allBooks = await fetchBooks();
@@ -131,25 +153,34 @@
             booksContainer.innerHTML = bookCards;
         };
 
-        /****** add to cart listeners ******/
-        const addToCartListeners = () => {
-            document.querySelectorAll('.card-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                const bookId = e.target.attributes['data-book-id'].value;
-                const book = bookMap.get(bookId);
-                const cartItems = JSON.parse(sessionStorage.getItem('cartItems')) ?? [];
-                cartItems.push(book);
-                sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
-                link.innerText = 'Added to cart';
-                link.classList.add("text-success");
-                link.removeEventListener('click', () => {
-                    console.log('Item added to cart');
-                });
-                });
-            });
-        };
+        addContent();
 
-        addContent().then(addToCartListeners);
-        
+        const addToCart = async (id, bookName, bookPrice) =>{
+            const bookData = {
+            bookId: id, // Generate a unique book ID
+            title: bookName,
+            price: bookPrice
+        };
+        console.log(bookData);
+        try {
+            const response = await fetch('/order/add-to-cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(bookData)
+            });
+
+            if (response.ok) {
+                const modalMessage = document.getElementById('modalMessage');
+                modalMessage.innerHTML = `Congratulations! You have added ${bookName} to the cart!`;
+            } else {
+                // Handle errors or show an error message
+                console.error('Failed to add to cart');
+            }
+        } catch (error) {
+            console.error('Error adding to cart:', error);
+        }
+    }
     </script>
 </html>
