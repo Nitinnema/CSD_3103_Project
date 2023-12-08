@@ -6,7 +6,6 @@ const addToCart = (req, res) => {
     const { bookId, title, price, quantity } = req.body; // Assuming you send these details
     const book = { bookId, title, price, quantity };
     cart.push(book);
-    console.log(cart);
     res.status(200).send('Book added to cart!');
 };
 
@@ -24,6 +23,11 @@ const removeFromCart = (req, res) => {
     cart = newArray;
     res.status(200).send('Book removed to cart!');
 }
+
+const emptyCart = (req, res) => {
+    cart = [];
+    res.status(200).send('Cart emptied');
+};
 
 const addOrder = async (req, res) => {
     try {
@@ -54,6 +58,7 @@ module.exports = {
     addToCart,
     getCart,
     removeFromCart,
+    emptyCart,
     addOrder,
     getOrders
 };

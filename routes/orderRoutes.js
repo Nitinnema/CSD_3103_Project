@@ -6,6 +6,7 @@ const orderController = require('../controllers/orderController');
 orderRouter.post('/add-to-cart', orderController.addToCart);
 orderRouter.get('/getBooks', orderController.getCart);
 orderRouter.delete('/remove-from-cart/:id', orderController.removeFromCart);
+orderRouter.delete('/empty-cart', orderController.emptyCart);
 
 // order functions
 orderRouter.post('/addOrder', orderController.addOrder);

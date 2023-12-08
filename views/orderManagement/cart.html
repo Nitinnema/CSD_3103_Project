@@ -13,14 +13,16 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>  
 </head>
 <style>
     .card {
         padding: 1em;
-        max-width: 250px;
+        max-width: 350px;
         box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+        margin-bottom: 20px;
     }
-
     ul {
         list-style: none;
         padding-left: 0px;
@@ -72,7 +74,7 @@
     </nav>
 
     <div class="container mt-5">
-        <h1>Your Cart</h1>
+        <h1 class="mb-5">Your Cart</h1>
         <div class="row">
             <div class="col-md-8" id="cart-container">
                 <!-- dynamic insertion-->
@@ -83,16 +85,36 @@
                     <div class="card-body">
                         <h5 class="card-title">Cart Summary</h5>
                         <p >Total Items: <span id="cart-items-count"></span></p>
-                        <p >Total Items: <span id="cart-items-price"></span></p>
-                        <button class="btn btn-primary btn-block" id="checkout-btn">Checkout</button>
+                        <p >Total Price: $<span id="cart-items-price"></span></p>
+                        <button class="btn btn-primary btn-block" id="checkout-btn" data-toggle="modal" data-target="#cartModal">Checkout</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cartModalLabel">Order placed</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <a href="/" class="btn btn-primary">Continue shopping</a>
+                    <a href="/userOrders" class="btn btn-primary">View Orders</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
     const $ = (selector) => document.querySelector(selector);
     const loggedUser = JSON.parse(sessionStorage.getItem('loggedUser'));
@@ -157,7 +179,17 @@
             body: JSON.stringify({customer: loggedUser, totalPrice: parseInt($('#cart-items-price').innerText)})
         });
         const data = await res.json();
-        console.log('data: ', data);
+        if(res.ok) {
+            // empty cart
+            const res = await fetch('http://localhost:3000/order/empty-cart', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const modalMessage = document.getElementById('modalMessage');
+            modalMessage.innerHTML = `Congratulations! Your order has been placed.`;
+        }
     });
 
     addContent();

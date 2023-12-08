@@ -148,9 +148,9 @@
                         <p class="card-text mb-0">Price: $${bookPrice}</p>
                         <p class="card-text mb-0">Pages: ${pages}</p>
                         <p class="card-text">Quantity in Stock: ${quantity}</p>
-                        <div class="d-flex" style="height: 30px;">
-                            <input type="number" id="addToCartQuantity_${_id}" name="addToCartQuantity" value="1" style="width: 70px;" />
-                            <button type="button" class="btn btn-primary ml-2 p-1" data-toggle="modal" data-target="#cartModal" onclick="addToCart('${_id}','${bookName}','${bookPrice}')">Add to Cart</button>
+                        <div class="d-flex">
+                            <input type="number" id="addToCartQuantity_${_id}" name="addToCartQuantity" value="1" style="width: 40px; text-align: center;" />
+                            <button type="button" class="btn btn-primary ml-2 p-2 text-center" data-toggle="modal" data-target="#cartModal" onclick="addToCart('${_id}','${bookName}','${bookPrice}')">Add to Cart</button>
                         </div>
                     </div>
                 </div>
