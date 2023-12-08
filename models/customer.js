@@ -5,7 +5,8 @@ const Order = require('./order');
 const CustomerSchema = Schema({
     username: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     password: {
         type: String,
@@ -20,7 +21,6 @@ const CustomerSchema = Schema({
         required: true
     },
     orders: [{type: ObjectId, ref: 'Order'}],
-    cart: [{type: ObjectId, ref: 'Book'}]
 });
 
 const Customer = model('Customer', CustomerSchema);

@@ -67,7 +67,8 @@
     </body>
     <script>
         const $ = (selector) => document.querySelector(selector);
-
+        const bookMap = new Map();
+        let globalIndex = 0;
         // check if no user is logged in the sessionStorage, redirect to login page
         const loggedUser = JSON.parse(sessionStorage.getItem('loggedUser'));
         console.log(loggedUser);
@@ -104,7 +105,9 @@
         };
 
         const cardComponent = (book) => {
+            globalIndex++;
             const { bookName, authorName, pages, quantity } = book;
+            bookMap.set(globalIndex.toString(), book);
             return (
                 `
                 <div class="card col-md-4 col-xsm-6 m-2">
@@ -113,7 +116,7 @@
                         <h6 class="card-subtitle mb-2 text-body-secondary">Author: ${authorName}</h6>
                         <p class="card-text mb-0">Pages: ${pages}</p>
                         <p class="card-text">Quantity: ${quantity}</p>
-                        <a href="#" class="card-link">Add to Cart</a>
+                        <a href="#" class="card-link" data-book-id=${globalIndex}>Add to Cart</a>
                     </div>
                 </div>
                 `
@@ -128,7 +131,25 @@
             booksContainer.innerHTML = bookCards;
         };
 
-        addContent();
+        /****** add to cart listeners ******/
+        const addToCartListeners = () => {
+            document.querySelectorAll('.card-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const bookId = e.target.attributes['data-book-id'].value;
+                const book = bookMap.get(bookId);
+                const cartItems = JSON.parse(sessionStorage.getItem('cartItems')) ?? [];
+                cartItems.push(book);
+                sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
+                link.innerText = 'Added to cart';
+                link.classList.add("text-success");
+                link.removeEventListener('click', () => {
+                    console.log('Item added to cart');
+                });
+                });
+            });
+        };
+
+        addContent().then(addToCartListeners);
         
     </script>
 </html>
