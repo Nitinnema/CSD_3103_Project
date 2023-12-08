@@ -128,9 +128,7 @@
         };
 
         const cardComponent = (book) => {
-            globalIndex++;
-            const { bookName, authorName, pages, quantity } = book;
-            bookMap.set(globalIndex.toString(), book);
+            const {_id, bookName, authorName, bookPrice, pages, quantity } = book;
             return (
                 `
                 <div class="card col-md-4 col-xsm-6 m-2">
@@ -140,7 +138,7 @@
                         <p class="card-text mb-0">Price: $${bookPrice}</p>
                         <p class="card-text mb-0">Pages: ${pages}</p>
                         <p class="card-text">Quantity: ${quantity}</p>
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cartModal" onclick="addToCart('${_id}','${bookName}','${bookPrice}')" data-book-id=${globalIndex}>Add to Cart</button>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cartModal" onclick="addToCart('${_id}','${bookName}','${bookPrice}')">Add to Cart</button>
                     </div>
                 </div>
                 `
@@ -155,25 +153,34 @@
             booksContainer.innerHTML = bookCards;
         };
 
-        /****** add to cart listeners ******/
-        const addToCartListeners = () => {
-            document.querySelectorAll('.card-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                const bookId = e.target.attributes['data-book-id'].value;
-                const book = bookMap.get(bookId);
-                const cartItems = JSON.parse(sessionStorage.getItem('cartItems')) ?? [];
-                cartItems.push(book);
-                sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
-                link.innerText = 'Added to cart';
-                link.classList.add("text-success");
-                link.removeEventListener('click', () => {
-                    console.log('Item added to cart');
-                });
-                });
-            });
-        };
+        addContent();
 
-        addContent().then(addToCartListeners);
-        
+        const addToCart = async (id, bookName, bookPrice) =>{
+            const bookData = {
+            bookId: id, // Generate a unique book ID
+            title: bookName,
+            price: bookPrice
+        };
+        console.log(bookData);
+        try {
+            const response = await fetch('/order/add-to-cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(bookData)
+            });
+
+            if (response.ok) {
+                const modalMessage = document.getElementById('modalMessage');
+                modalMessage.innerHTML = `Congratulations! You have added ${bookName} to the cart!`;
+            } else {
+                // Handle errors or show an error message
+                console.error('Failed to add to cart');
+            }
+        } catch (error) {
+            console.error('Error adding to cart:', error);
+        }
+    }
     </script>
 </html>
