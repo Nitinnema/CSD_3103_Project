@@ -1,167 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Browse Books</title>
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-        <!-- JavaScript and dependencies (Popper.js and Bootstrap Bundle with Popper) -->
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    </head>
-    <style>
-        .card {
-            padding: 1em;
-            max-width: 350px;
-            box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
-        }
-        ul {
-            list-style: none;
-            padding-left: 0px;
-            align-self: 'center';
-        }
-        #drop-down {
-            padding-top: 25px;
-        }
-        .none {
-            display: none;
-        }
-    </style>
-    <body>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="/">FINOP</a>
-                <div class="d-flex justify-content-center align-items-center collapse">
-                    <form class="d-flex" role="search" id="search-form">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="search-input">
-                        <button class="btn btn-outline-success" type="submit" id="search-btn">Search</button>
-                    </form>
-                    <ul>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" id="drop-down" data-bs-toggle="dropdown" aria-expanded="false">
-                              Dropdown
-                            </a>
-                            <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" href="orderCart">Cart</a></li>
-                              <li><a class="dropdown-item" href="#">Orders</a></li>
-                              <li><hr class="dropdown-divider"></li>
-                              <li><a class="dropdown-item" href="#" id="signout">Sign out</a></li>
-                            </ul>
-                          </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <section id="books-section" class="d-flex justify-content-center align-content-center m-5">
-            <div class="wrapper m-4 container-md">
-                <h2 >Browse Books</h2>
-                <h4 id="search-title"></h4>
-                <div id="books-container" class="row mt-5"></div>
-                <div class="mt-5">
-                    <a href="/" class="text-center btn btn-primary allBooks-btn none">All Books</a>
-                </div>
-            </div>
-        </section>
 
-        <!-- Modal -->
-        <div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="cartModalLabel">Added to Cart</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p id="modalMessage"></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <a href="orderCart" class="btn btn-primary">View Cart</a>
-                    </div>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Books</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- JavaScript and dependencies (Popper.js and Bootstrap Bundle with Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<style>
+    .card {
+        padding: 1em;
+        max-width: 350px;
+        box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+    }
+
+    ul {
+        list-style: none;
+        padding-left: 0px;
+        align-self: 'center';
+    }
+
+    #drop-down {
+        padding-top: 25px;
+    }
+
+    .none {
+        display: none;
+    }
+</style>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">FINOP</a>
+            <div class="d-flex justify-content-center align-items-center collapse">
+                <form class="d-flex" role="search" id="search-form">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
+                        id="search-input">
+                    <button class="btn btn-outline-success" type="submit" id="search-btn">Search</button>
+                </form>
+                <ul>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" id="drop-down"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Dropdown
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="orderCart">Cart</a></li>
+                            <li><a class="dropdown-item" href="#">Orders</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#" id="signout">Sign out</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <section id="books-section" class="d-flex justify-content-center align-content-center m-5">
+        <div class="wrapper m-4 container-md">
+            <h2>Browse Books</h2>
+            <h4 id="search-title"></h4>
+            <div id="books-container" class="row mt-5"></div>
+            <div class="mt-5">
+                <a href="/" class="text-center btn btn-primary allBooks-btn none">All Books</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cartModalLabel">Added to Cart</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <a href="orderCart" class="btn btn-primary">View Cart</a>
                 </div>
             </div>
         </div>
-    </body>
-    <script>
-        const $ = (selector) => document.querySelector(selector);
-        const bookMap = new Map();
-        let globalIndex = 0;
-        // check if no user is logged in the sessionStorage, redirect to login page
-        const loggedUser = JSON.parse(sessionStorage.getItem('loggedUser'));
-        console.log(loggedUser);
-        if(!loggedUser) {
-            window.location.href = '/login';
+    </div>
+</body>
+<script>
+    const $ = (selector) => document.querySelector(selector);
+    const bookMap = new Map();
+    let globalIndex = 0;
+    // check if no user is logged in the sessionStorage, redirect to login page
+    const loggedUser = JSON.parse(sessionStorage.getItem('loggedUser'));
+    console.log(loggedUser);
+    if (!loggedUser) {
+        window.location.href = '/login';
+    }
+
+    /****** Navbar logic ******/
+    $('#signout').addEventListener('click', () => {
+        // clear session storage loggedUser
+        sessionStorage.setItem('loggedUser', '');
+        // redirect to login page
+        window.location.href = '/login';
+    });
+
+    $('#drop-down').innerText = `Hello, ${loggedUser.firstName}`;
+
+    $('#search-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const searchValue = $('#search-input').value;
+        if (searchValue.trim(' ') !== '') {
+            await addContent(searchValue);
+            $('#search-title').innerText = `Results for "${searchValue}"`;
+            $('.allBooks-btn').classList.remove('none');
         }
-
-        /****** Navbar logic ******/
-        $('#signout').addEventListener('click', () => {
-            // clear session storage loggedUser
-            sessionStorage.setItem('loggedUser', '');
-            // redirect to login page
-            window.location.href = '/login';
-        });
-
-        $('#drop-down').innerText = `Hello, ${loggedUser.firstName}`;
-
-        $('#search-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const searchValue = $('#search-input').value;
-            if(searchValue.trim(' ') !== '') {
-                await addContent(searchValue);
-                $('#search-title').innerText = `Results for "${searchValue}"`;
-                $('.allBooks-btn').classList.remove('none');
-            }
-        });
+    });
 
 
-        /****** viewing books functions ******/
-        const fetchBooks = async () => {
-            const res = await fetch('http://localhost:3000/book/getBooks');
-            const data = await res.json();
-            return data;
-        };
+    /****** viewing books functions ******/
+    const fetchBooks = async () => {
+        const res = await fetch('http://localhost:3000/book/getBooks');
+        const data = await res.json();
+        return data;
+    };
 
-        const cardComponent = (book) => {
-            const {_id, bookName, authorName, bookPrice, pages, quantity } = book;
-            return (
-                `
+    const cardComponent = (book) => {
+        const { _id, bookName, authorName, bookPrice, pages, quantity } = book;
+        return (
+            `
                 <div class="card col-md-4 col-xsm-6 m-2">
                     <div class="card-body">
                         <h5 class="card-title">${bookName}</h5>
                         <h6 class="card-subtitle mb-2 text-body-secondary">Author: ${authorName}</h6>
                         <p class="card-text mb-0">Price: $${bookPrice}</p>
                         <p class="card-text mb-0">Pages: ${pages}</p>
-                        <p class="card-text">Quantity: ${quantity}</p>
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cartModal" onclick="addToCart('${_id}','${bookName}','${bookPrice}')">Add to Cart</button>
+                        <p class="card-text">Quantity in Stock: ${quantity}</p>
+                        <div class="d-flex" style="height: 30px;">
+                            <input type="number" id="addToCartQuantity_${_id}" name="addToCartQuantity" value="1" style="width: 70px;" />
+                            <button type="button" class="btn btn-primary ml-2 p-1" data-toggle="modal" data-target="#cartModal" onclick="addToCart('${_id}','${bookName}','${bookPrice}')">Add to Cart</button>
+                        </div>
                     </div>
                 </div>
                 `
-            );
-        };      
+        );
+    };
 
-        const addContent = async (keyword) => {
-            const allBooks = await fetchBooks();
-            const filteredBooks = keyword ? allBooks.filter(book => book.bookName.toLowerCase().includes(keyword.toLowerCase())) : allBooks;
-            const bookCards = filteredBooks.map(book => cardComponent(book)).join('');
-            const booksContainer = $('#books-container');
-            booksContainer.innerHTML = bookCards;
-        };
+    const addContent = async (keyword) => {
+        const allBooks = await fetchBooks();
+        const filteredBooks = keyword ? allBooks.filter(book => book.bookName.toLowerCase().includes(keyword.toLowerCase())) : allBooks;
+        const bookCards = filteredBooks.map(book => cardComponent(book)).join('');
+        const booksContainer = $('#books-container');
+        booksContainer.innerHTML = bookCards;
+    };
 
-        addContent();
+    addContent();
 
-        const addToCart = async (id, bookName, bookPrice) =>{
-            const bookData = {
+    const addToCart = async (id, bookName, bookPrice) => {
+        const quantityOrdered = document.getElementById(`addToCartQuantity_${id}`);
+        const bookData = {
             bookId: id, // Generate a unique book ID
             title: bookName,
-            price: bookPrice
+            price: bookPrice,
+            quantity: quantityOrdered.value
         };
-        console.log(bookData);
+        console.log(bookData, 'jjjjjjjjjjjjjjjjjj');
         try {
             const response = await fetch('/order/add-to-cart', {
                 method: 'POST',
@@ -182,5 +197,6 @@
             console.error('Error adding to cart:', error);
         }
     }
-    </script>
+</script>
+
 </html>
