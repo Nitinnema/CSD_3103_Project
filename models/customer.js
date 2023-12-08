@@ -20,7 +20,7 @@ const CustomerSchema = Schema({
         type: String,
         required: true
     },
-    orders: [{type: ObjectId, ref: 'Order'}],
+    orders: [],
 });
 
 const Customer = model('Customer', CustomerSchema);

@@ -27,5 +27,28 @@ const addCustomer = async (req, res) => {
     }
 };
 
+const getCustomerOrders = async (req, res) => {
+    try {
+        const { customer } = req.body;
+        const foundCustomer = await Customer.findOne({username: customer.username});
+        const { orders } = foundCustomer;
+        res.status(200).json(orders);
+    } catch(err) {
+        res.status(500).json({error: err});
+    }
+};
 
-module.exports = { validateCustomer, addCustomer };
+const updateCustomerOrders = async (customer, newOrder) => {
+    try {
+        const foundCustomer = await Customer.findOne({username: customer.username});
+        const { orders } = foundCustomer;
+        orders.push(newOrder);
+        await Customer.updateOne({username: customer.username}, {orders: orders});
+        return {status: 'success'};
+    } catch(err) {
+        return {status: 'error'};
+    }
+};
+
+
+module.exports = { validateCustomer, addCustomer, getCustomerOrders, updateCustomerOrders };

@@ -1,4 +1,5 @@
 const Order = require('../models/order');
+const { updateCustomerOrders } = require('./customerController');
 let cart = []; // In-memory cart storage
 
 // Add book to cart
@@ -37,6 +38,7 @@ const addOrder = async (req, res) => {
         const myDate = `${date.getMonth()}/${date.getDay()}/${date.getFullYear()}`
         const status = 'Order placed';
         const newOrder = new Order({customer, books, date: myDate, status, totalPrice});
+        await updateCustomerOrders(customer, newOrder);
         await newOrder.save();
         res.status(200).json(newOrder);
     } catch(err) {
