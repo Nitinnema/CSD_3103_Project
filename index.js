@@ -4,6 +4,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const bookRoutes = require('./routes/bookRoutes');
 const customerRouter = require('./routes/customerRoutes');
+const orderRouter = require('./routes/orderRoutes');
 
 const app = express();
 const SERVER_PORT = 3000;
@@ -14,7 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("views"));
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/bookStore').then(() => {
+mongoose.connect('mongodb://0.0.0.0:27017/bookStore').then(() => {
     console.log("db connected");
 }).catch((err) => {
     console.log(err);
@@ -22,6 +23,7 @@ mongoose.connect('mongodb://localhost:27017/bookStore').then(() => {
 
 app.use('/book', bookRoutes);
 app.use('/customer', customerRouter);
+app.use('/order', orderRouter);
 
 /********* Book Management *********/
 app.get("/showBooks", function (req, res) {
@@ -56,7 +58,17 @@ app.get("/showOrders", function (req, res) {
     res.sendFile(filePath);
 });
 
+/********* Orders Management *********/
+app.get("/showOrders", function (req, res) {
+    const filePath = path.join(__dirname, 'views', 'orderManagement','showOrders.html');
+    res.sendFile(filePath);
+});
 
+/*********Order Management *********/
+app.get('/orderCart', (req, res) => {
+    const filePath = path.join(__dirname, 'views', 'orderManagement', 'cart.html');
+    res.sendFile(filePath);
+});
 
 app.listen(process.env.PORT || SERVER_PORT, () => {
     console.log(`Server running at http://${SERVER_HOST}:${SERVER_PORT}/`);
