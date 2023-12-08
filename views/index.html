@@ -34,35 +34,64 @@
     .none {
         display: none;
     }
+
+    @media(max-width: 768px) {
+        .collapse-container {
+            flex-direction: column !important;
+            align-items: start !important;
+        }
+        .form-div {
+            align-self: center !important;
+        }
+    }
 </style>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">FINOP</a>
-            <div class="d-flex justify-content-center align-items-center collapse">
-                <form class="d-flex" role="search" id="search-form">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
-                        id="search-input">
-                    <button class="btn btn-outline-success" type="submit" id="search-btn">Search</button>
-                </form>
-                <ul>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" id="drop-down"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            Dropdown
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/orderCart">Cart</a></li>
-                            <li><a class="dropdown-item" href="/userOrders">Orders</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="#" id="signout">Sign out</a></li>
-                        </ul>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="collapse-container d-flex justify-content-between align-items-center w-100">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item admin-links none">
+                      <a class="nav-link" aria-current="page" href="/showBooks">Book Management</a>
                     </li>
-                </ul>
+                    <li class="nav-item admin-links none">
+                      <a class="nav-link" href="/showOrders">Order Management</a>
+                    </li>
+                  </ul>
+                  <div class="d-flex justify-content-end align-items-center form-div">
+                    <form class="d-flex" role="search" id="search-form">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
+                            id="search-input">
+                        <button class="btn btn-outline-success" type="submit" id="search-btn">Search</button>
+                    </form>
+                    <ul>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" id="drop-down"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Dropdown
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/orderCart">Cart</a></li>
+                                <li><a class="dropdown-item" href="/userOrders">Orders</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#" id="signout">Sign out</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    </div>
+                </div>
+                </div>
             </div>
+            
         </div>
     </nav>
     <section id="books-section" class="d-flex justify-content-center align-content-center m-5">
@@ -107,6 +136,12 @@
     console.log(loggedUser);
     if (!loggedUser) {
         window.location.href = '/login';
+    }
+
+    if(loggedUser.username === 'admin') {
+        document.querySelectorAll('.admin-links').forEach(link => {
+            link.classList.remove('none');
+        });
     }
 
     /****** Navbar logic ******/
