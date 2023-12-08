@@ -8,6 +8,10 @@ const OrderSchema = Schema({
         required: true,
         unique: true
     },
+    customer: {
+        type: ObjectId,
+        ref: 'Customer'
+    },
     date: {
         type: Date,
         required: true

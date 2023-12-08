@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Management</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-4 mb-5" style="width: 80%;">
+        <!-- Display Fetched Data in Table -->
+        <div class="d-flex">
+            <h2 class="">Orders List</h2>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Book Name</th>
+                    <th>Author Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Pages</th>
+                </tr>
+            </thead>
+            <tbody id="bookTableBody">
+                <!-- This area will be dynamically populated with book data -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="editModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit book</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Edit form with Bootstrap styling -->
+                    <form id="editbookForm">
+                        <div class="form-group">
+                            <label for="editBookName">Book Name:</label>
+                            <input type="text" class="form-control" id="editBookName" name="editBookName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editAuthorName">Author Name:</label>
+                            <input type="text" class="form-control" id="editAuthorName" name="editAuthorName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editBookPrice">Price</label>
+                            <input type="text" class="form-control" id="editBookPrice" name="editBookPrice" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editQuantity">Quantity</label>
+                            <input type="text" class="form-control" id="editQuantity" name="editQuantity" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPages">Pages</label>
+                            <input type="text" class="form-control" id="editPages" name="editPages" required>
+                        </div>
+                        <input type="hidden" class="form-control" id="editID" name="editID" required>
+                        <button type="submit" class="btn btn-success">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and jQuery (for Bootstrap functionality) -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(() => {
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost:3000/book/getBooks',
+                success: (books) => {
+                    console.log('Books', books);
+                    populatebookTable(books)
+                },
+                error: (error) => {
+                    console.error('Error adding book:', error);
+                },
+            });
+
+            // Function to populate the table with book data
+            const populatebookTable = (books) => {
+                const bookTableBody = $('#bookTableBody');
+                bookTableBody.empty(); // Clear existing rows
+
+                books.forEach(book => {
+                    const row = $('<tr>');
+                    row.append($('<td>').text(book.bookName));
+                    row.append($('<td>').text(book.authorName));
+                    row.append($('<td>').text(book.bookPrice));
+                    row.append($('<td>').text(book.quantity));
+                    row.append($('<td>').text(book.pages));
+
+                    const editButton = $('<button>').text('Edit').addClass('btn btn-warning btn-sm mr-1');
+                    editButton.on('click', () => {
+                        // Implement your edit logic here
+                        console.log('Edit clicked for book:', book);
+                        $('#editBookName').val(book.bookName);
+                        $('#editAuthorName').val(book.authorName);
+                        $('#editBookPrice').val(book.bookPrice);
+                        $('#editQuantity').val(book.quantity);
+                        $('#editPages').val(book.pages);
+                        $('#editID').val(book._id);
+                        $('#editModal').modal('show');
+                    });
+
+                    const deleteButton = $('<button>').text('Delete').addClass('btn btn-danger btn-sm');
+                    deleteButton.on('click', () => {
+                        // Implement your delete logic here
+                        $.ajax({
+                            type: 'DELETE',
+                            url: `http://localhost:3000/book/removeBook/${book._id}`,
+                            success: (data) => {
+                                console.log('book removed:', data);
+                                // Update UI or perform other actions as needed
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 1000);
+                            },
+                            error: (error) => {
+                                console.error('Error removing book:', error);
+                            },
+                        });
+                        console.log('Delete clicked for book:', book);
+                    });
+
+                    row.append($('<td>').append(editButton).append(deleteButton));
+                    bookTableBody.append(row);
+                    bookTableBody.append(row);
+                });
+            };
+        });
+
+        $('#editbookForm').submit((event) => {
+            event.preventDefault();
+            const editedData = {
+                bookName: $('#editBookName').val(),
+                authorName: $('#editAuthorName').val(),
+                bookPrice: $('#editBookPrice').val(),
+                quantity: $('#editQuantity').val(),
+                pages: $('#editPages').val(),
+                editId: $('#editID').val()
+            };
+            $.ajax({
+                type: 'PUT',
+                url: `http://localhost:3000/book/modifyBook/${editedData.editId}`,
+                data: JSON.stringify(editedData),
+                contentType: 'application/json',
+                success: (data) => {
+                    console.log('book modified:', data);
+                    setTimeout(() => {
+                        location.reload();
+                    }, 800);
+                    $('#editModal').modal('hide');
+                },
+                error: (error) => {
+                    console.error('Error modifying book:', error);
+                },
+            });
+        });
+    </script>
+</body>
+
+</html>

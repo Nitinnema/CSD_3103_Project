@@ -50,6 +50,12 @@ app.get('/signup', (req, res) => {
     });
 });
 
+/********* Orders Management *********/
+app.get("/showOrders", function (req, res) {
+    const filePath = path.join(__dirname, 'views', 'orderManagement','showOrders.html');
+    res.sendFile(filePath);
+});
+
 
 
 app.listen(process.env.PORT || SERVER_PORT, () => {
