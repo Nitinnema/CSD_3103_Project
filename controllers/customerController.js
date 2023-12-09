@@ -50,5 +50,18 @@ const updateCustomerOrders = async (customer, newOrder) => {
     }
 };
 
-
-module.exports = { validateCustomer, addCustomer, getCustomerOrders, updateCustomerOrders };
+const getCustomerName = async (req, res) => {
+    const customerId = req.params.id;
+    try {
+        const customer = await Customer.findById(customerId);
+        if (customer) {
+            res.json(`${customer.firstName} ${customer.lastName}`);
+        } else {
+            res.json('Unknown');
+        }
+    } catch (err) {
+        console.error('Error fetching customer:', err);
+        res.status(500).json('Error fetching customer');
+    }
+}
+module.exports = { validateCustomer, addCustomer, getCustomerOrders, updateCustomerOrders, getCustomerName };

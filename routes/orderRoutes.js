@@ -11,5 +11,8 @@ orderRouter.delete('/empty-cart', orderController.emptyCart);
 // order functions
 orderRouter.post('/addOrder', orderController.addOrder);
 orderRouter.get('/getOrders', orderController.getOrders);
+orderRouter.get('/getAllOrders', orderController.getAllOrders);
+orderRouter.put('/modifyStatus/:id', orderController.updateStatus);
+orderRouter.delete('/removeOrder/:id', orderController.deleteOrder);
 
 module.exports = orderRouter;

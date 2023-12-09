@@ -8,7 +8,29 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- JavaScript and dependencies (Popper.js and Bootstrap Bundle with Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <style>
+        .custom-toast {
+            font-family: 'Arial, sans-serif';
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0px;
+            align-self: 'center';
+        }
+
+        #drop-down {
+            padding-top: 25px;
+        }
 
         .none {
             display: none;
@@ -27,6 +49,48 @@
 </head>
 
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">FINOP</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="collapse-container d-flex justify-content-between align-items-center w-100">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item admin-links none">
+                      <a class="nav-link" aria-current="page" href="/showBooks">Book Management</a>
+                    </li>
+                    <li class="nav-item admin-links none">
+                      <a class="nav-link" href="/showOrders">Order Management</a>
+                    </li>
+                  </ul>
+                  <div class="d-flex justify-content-end align-items-center form-div">
+                    <ul>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" id="drop-down"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Dropdown
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/orderCart">Cart</a></li>
+                                <li><a class="dropdown-item" href="/userOrders">Orders</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#" id="signout">Sign out</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    </div>
+                </div>
+                </div>
+            </div>
+            
+        </div>
+    </nav>
     <div class="container mt-4 mb-5" style="width: 80%;">
         <!-- Display Fetched Data in Table -->
         <div class="d-flex">
@@ -35,52 +99,41 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Book Name</th>
-                    <th>Author Name</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Pages</th>
+                    <th>Book Names</th>
+                    <th>Customer Name</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th colspan="2">Actions</th>
                 </tr>
             </thead>
-            <tbody id="bookTableBody">
+            <tbody id="orderTableBody">
                 <!-- This area will be dynamically populated with book data -->
             </tbody>
         </table>
     </div>
 
-    <div class="modal" tabindex="-1" role="dialog" id="editModal">
+    <div class="modal" tabindex="-1" role="dialog" id="statusModal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit book</h5>
+                    <h5 class="modal-title">Update status</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <!-- Edit form with Bootstrap styling -->
-                    <form id="editbookForm">
+                    <form id="statusForm">
                         <div class="form-group">
-                            <label for="editBookName">Book Name:</label>
-                            <input type="text" class="form-control" id="editBookName" name="editBookName" required>
+                            <label for="editStatus">Status</label>
+                            <select class="form-control" id="editStatus" name="editStatus" required>
+                                <option value="Order Placed">Order Placed</option>
+                                <option value="Shipped">Shipped</option>
+                                <option value="Out for Delivery">Out for Delivery</option>
+                                <option value="Delivered">Delivered</option>
+                            </select>
                         </div>
-                        <div class="form-group">
-                            <label for="editAuthorName">Author Name:</label>
-                            <input type="text" class="form-control" id="editAuthorName" name="editAuthorName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="editBookPrice">Price</label>
-                            <input type="text" class="form-control" id="editBookPrice" name="editBookPrice" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="editQuantity">Quantity</label>
-                            <input type="text" class="form-control" id="editQuantity" name="editQuantity" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="editPages">Pages</label>
-                            <input type="text" class="form-control" id="editPages" name="editPages" required>
-                        </div>
-                        <input type="hidden" class="form-control" id="editID" name="editID" required>
+                        <input type="text" class="form-control" id="orderId" name="orderId" required>
                         <button type="submit" class="btn btn-success">Save Changes</button>
                     </form>
                 </div>
@@ -92,13 +145,34 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
+        const loggedUser = JSON.parse(sessionStorage.getItem('loggedUser'));
+        console.log('loggedUser: ', loggedUser);
+        if (!loggedUser) {
+            window.location.href = '/login';
+        }
+
+        if(loggedUser.username === 'admin') {
+            document.querySelectorAll('.admin-links').forEach(link => {
+                link.classList.remove('none');
+            });
+        }
+
+        document.getElementById('signout').addEventListener('click', () => {
+            // clear session storage loggedUser
+            sessionStorage.setItem('loggedUser', '');
+            // redirect to login page
+            window.location.href = '/login';
+        });
+
+        document.getElementById('drop-down').innerText = `Hello, ${loggedUser.firstName}`;
+
         $(document).ready(() => {
             $.ajax({
                 type: 'GET',
-                url: 'http://localhost:3000/book/getBooks',
-                success: (books) => {
-                    console.log('Books', books);
-                    populatebookTable(books)
+                url: 'http://localhost:3000/order/getAllOrders',
+                success: (orders) => {
+                    console.log('Orders', orders);
+                    populatebookTable(orders);
                 },
                 error: (error) => {
                     console.error('Error adding book:', error);
@@ -106,29 +180,37 @@
             });
 
             // Function to populate the table with book data
-            const populatebookTable = (books) => {
-                const bookTableBody = $('#bookTableBody');
-                bookTableBody.empty(); // Clear existing rows
-
-                books.forEach(book => {
+            const populatebookTable = (ordersData) => {
+                const orderTableBody = $('#orderTableBody');
+                orderTableBody.empty(); // Clear existing rows
+                orders = ordersData.orders
+                orders.forEach(async order => {
                     const row = $('<tr>');
-                    row.append($('<td>').text(book.bookName));
-                    row.append($('<td>').text(book.authorName));
-                    row.append($('<td>').text(book.bookPrice));
-                    row.append($('<td>').text(book.quantity));
-                    row.append($('<td>').text(book.pages));
+                    const bookNames = order.books.map(book => book.title).join(', ');
+                    let customerName = 'Unknown'; // Default value if customer fetch fails
 
-                    const editButton = $('<button>').text('Edit').addClass('btn btn-warning btn-sm mr-1');
+                    try {
+                        const customerResponse = await $.ajax({
+                            url: `http://localhost:3000/customer/getCustomerName/${order.customer}`,
+                            method: 'GET',
+                        });
+
+                        customerName = customerResponse;
+                    } catch (err) {
+                        console.error('Error fetching customer:', err);
+                    }
+                    row.append($('<td>').text(bookNames));
+                    row.append($('<td>').text(customerName));
+                    row.append($('<td>').text(order.totalPrice));
+                    row.append($('<td>').text(order.status));
+
+                    const editButton = $('<button>').text('Update Status').addClass('btn btn-warning btn-sm mr-1');
                     editButton.on('click', () => {
                         // Implement your edit logic here
-                        console.log('Edit clicked for book:', book);
-                        $('#editBookName').val(book.bookName);
-                        $('#editAuthorName').val(book.authorName);
-                        $('#editBookPrice').val(book.bookPrice);
-                        $('#editQuantity').val(book.quantity);
-                        $('#editPages').val(book.pages);
-                        $('#editID').val(book._id);
-                        $('#editModal').modal('show');
+                        console.log('Edit status clicked for order:', order);
+                        $('#editStatus').val(order.status);
+                        $('#orderId').val(order._id);
+                        $('#statusModal').modal('show');
                     });
 
                     const deleteButton = $('<button>').text('Delete').addClass('btn btn-danger btn-sm');
@@ -136,7 +218,7 @@
                         // Implement your delete logic here
                         $.ajax({
                             type: 'DELETE',
-                            url: `http://localhost:3000/book/removeBook/${book._id}`,
+                            url: `http://localhost:3000/order/removeOrder/${order._id}`,
                             success: (data) => {
                                 console.log('book removed:', data);
                                 // Update UI or perform other actions as needed
@@ -145,43 +227,39 @@
                                 }, 1000);
                             },
                             error: (error) => {
-                                console.error('Error removing book:', error);
+                                console.error('Error removing order:', error);
                             },
                         });
-                        console.log('Delete clicked for book:', book);
+                        console.log('Delete clicked for order:', order);
                     });
 
                     row.append($('<td>').append(editButton).append(deleteButton));
-                    bookTableBody.append(row);
-                    bookTableBody.append(row);
+                    orderTableBody.append(row);
+                    orderTableBody.append(row);
                 });
             };
         });
 
-        $('#editbookForm').submit((event) => {
+        $('#statusForm').submit((event) => {
             event.preventDefault();
             const editedData = {
-                bookName: $('#editBookName').val(),
-                authorName: $('#editAuthorName').val(),
-                bookPrice: $('#editBookPrice').val(),
-                quantity: $('#editQuantity').val(),
-                pages: $('#editPages').val(),
-                editId: $('#editID').val()
+                status: $('#editStatus').val(),
+                orderId: $('#orderId').val()
             };
             $.ajax({
                 type: 'PUT',
-                url: `http://localhost:3000/book/modifyBook/${editedData.editId}`,
+                url: `http://localhost:3000/order/modifyStatus/${editedData.orderId}`,
                 data: JSON.stringify(editedData),
                 contentType: 'application/json',
                 success: (data) => {
-                    console.log('book modified:', data);
+                    console.log('status modified:', data);
                     setTimeout(() => {
                         location.reload();
                     }, 800);
-                    $('#editModal').modal('hide');
+                    $('#statusModal').modal('hide');
                 },
                 error: (error) => {
-                    console.error('Error modifying book:', error);
+                    console.error('Error modifying order status:', error);
                 },
             });
         });
