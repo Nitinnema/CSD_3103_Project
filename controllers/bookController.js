@@ -44,7 +44,7 @@ exports.updateBook = async (req, res) => {
     if (modifiedBook) {
       res.json(modifiedBook);
     } else {
-      res.status(404).send('Student not found');
+      res.status(404).send('Book not found');
     }
   } catch (error) {
     console.error(error);

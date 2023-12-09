@@ -57,11 +57,56 @@ const getOrders = async (req, res) => {
     }
 };
 
+const getAllOrders = async (req, res) => {
+    try {
+        const allOrders = await Order.find();
+        res.status(200).json({orders: allOrders});
+    } catch(err) {
+        console.log('getOrders error: ', err);
+        res.status(500).json({error: err});
+    }
+};
+
+const updateStatus = async (req, res) => {
+    try {
+      const modifiedOrder = await Order.findOneAndUpdate(
+        { _id: req.params.id },
+        { $set: { status: req.body.status } },
+        { new: true }
+      );
+      if (modifiedOrder) {
+        res.json(modifiedOrder);
+      } else {
+        res.status(404).send('Order not found');
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  }
+
+  const deleteOrder = async (req, res) => {
+    try {
+      const deletedOrder = await Order.findOneAndDelete({ _id: req.params.id });
+      if (deletedOrder) {
+        res.json(deletedOrder);
+      } else {
+        res.status(404).send('Order not found');
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  }
+
 module.exports = {
     addToCart,
     getCart,
     removeFromCart,
     emptyCart,
     addOrder,
-    getOrders
+    getOrders,
+    getAllOrders,
+    updateStatus,
+    deleteOrder
 };
