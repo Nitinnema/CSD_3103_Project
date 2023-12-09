@@ -26,7 +26,7 @@ exports.deleteBook = async (req, res) => {
     if (deletedBook) {
       res.json(deletedBook);
     } else {
-      res.status(404).send('Student not found');
+      res.status(404).send('Book not found');
     }
   } catch (error) {
     console.error(error);
